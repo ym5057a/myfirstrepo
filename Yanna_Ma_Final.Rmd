@@ -1,0 +1,99 @@
+---
+title: "Yanna Ma Final"
+author: "Yanna Ma"
+date: "12/12/2019"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+library(stringr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
+library(readr)
+library(forcats)
+
+#1 
+college_score <- read_csv("/Users/mayanna/Desktop/Copy of college_score(1).csv")
+
+#2
+college_score$ICLEVEL[college_score$ICLEVEL=="1"]<-"4 year"
+college_score$ICLEVEL[college_score$ICLEVEL=="2"]<-"2 year"
+college_score$ICLEVEL[college_score$ICLEVEL=="3"]<-"less than 2 year"
+
+ggplot(college_score, mapping = aes(COSTT4_A,MN_EARN_WNE_P6))+
+  geom_point()+
+  facet_wrap(~ICLEVEL,nrow = 3)+
+  labs(x="Average cost of attendance",y="Mean earnings of students 6 years after graduation")+
+  coord_flip()
+```
+```{r}
+#3
+AGE_ENTRY2<-college_score%>%
+  select(AGE_ENTRY)%>%
+  na.omit()
+college_score$AGE_ENTRY<- as.numeric(college_score$AGE_ENTRY)
+college_score$AGE_ENTRY2<-ceiling(college_score$AGE_ENTRY)
+
+ggplot(college_score)+
+  geom_histogram(mapping = aes(AGE_ENTRY2),bidwth = 1, stat="count")+
+  labs(x="the Average Age of Entry")
+
+#Comment: The distribution is slightly skewed to the right, the shape is unimodal, which means,
+#the majority of average age of entry is in between 25 to 30 according to the histogram distribution.
+```
+```{r}
+#4
+college_score%>%
+  arrange(desc(AGE_ENTRY))%>%
+  select(INSTNM,AGE_ENTRY)%>%
+  print(n=10)
+
+#5
+americandf<-college_score %>%
+  filter(INSTNM=="American University")
+americandf
+
+#6
+college_score%>%
+  filter(SAT_AVG>1000)%>%
+  count()
+
+#7
+college_score%>%
+  arrange(desc(SAT_AVG))%>%
+  print(n=10)
+
+#8
+ggplot(gss_cat,aes(rincome))+
+  geom_bar()
+#Comment:Data in x-axis overlaped, which was difficult to be seen.
+
+#9a
+ggplot(gss_cat,aes(rincome))+
+  geom_bar()+
+  coord_flip()
+#Comment:After we fliped it, the data has clearly shown by ranges of income rather than 
+#overlapping.
+
+#9b
+#Name 3 categorical variables
+#Sex;Smoker;day;
+
+#10
+levels(tips$day)
+tips%>%  
+  count(day)
+#Comment
+
+#11
+ggplot(tips)+
+  geom_histogram(aes(total_bill),binwidth = 2)
+
+#12
+ggplot(tips)+
+  geom_histogram(aes(total_bill),binwidth = 2)+
+  facet_grid(sex~smoker)
+```
